@@ -1,0 +1,5 @@
+optimizer: Adam
+loss: dice_loss
+metrics: [dice_coeff, binary_accuracy]
+input_shape: [512, 512, 3]
+
