@@ -25,11 +25,13 @@ if __name__ == '__main__':
         training_generator = generator(config, Stage.Training)
         validation_generator = generator(config, Stage.Validation)
 
-        history: tf.keras.callbacks.History = model.fit(
+        model.fit(
             x=training_generator,
             steps_per_epoch=config.steps,
             validation_data=validation_generator,
             validation_steps=int(config.steps * config.validation_split)
         )
+
+        model.save(f"unet_{i}_{config.epochs}", include_optimizer=False, save_format="h5")
 
     model.save("unet", include_optimizer=False, save_format="h5")
