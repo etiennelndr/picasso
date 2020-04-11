@@ -1,16 +1,35 @@
-from tensorflow.keras.metrics import binary_accuracy
+import pathlib
 
-from .utils.losses import dice_loss
-from .utils.metrics import dice_coef
+import tensorflow as tf
+
+from .config import Config
 from .models.unet import unet
+from .processing.preprocessing import generator
+from .processing.preprocessing import Stage
 
 
 if __name__ == '__main__':
-    metrics = [
-        dice_coef,
-        binary_accuracy
-    ]
-    input_shape = (512, 512, 3)
-    base_kernel = 16
-    kernel_size = (3, 3)
-    model = unet(input_shape, base_kernel, kernel_size, metrics=metrics, loss=dice_loss)
+    print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
+
+    config = Config(pathlib.Path("data/conf.yaml"))
+    input_shape = config.input_shape
+    base_kernel = config.get_property("base_kernel", int)
+    kernel_size = config.get_property("kernel_size", tuple)
+    metrics = config.metrics
+    loss = config.loss
+
+    model = unet(input_shape, base_kernel, kernel_size, metrics=metrics, loss=loss, print_summary=False)
+
+    for i in range(config.epochs):
+        print(f"Epoch {i}/{config.epochs}")
+        training_generator = generator(config, Stage.Training)
+        validation_generator = generator(config, Stage.Validation)
+
+        history: tf.keras.callbacks.History = model.fit(
+            x=training_generator,
+            steps_per_epoch=config.steps,
+            validation_data=validation_generator,
+            validation_steps=int(config.steps * config.validation_split)
+        )
+
+    model.save("unet", include_optimizer=False, save_format="h5")
