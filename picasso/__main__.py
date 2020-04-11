@@ -32,6 +32,6 @@ if __name__ == '__main__':
             validation_steps=int(config.steps * config.validation_split)
         )
 
-        model.save(f"unet_{i}_{config.epochs}", include_optimizer=False, save_format="h5")
+        model.save(f"unet_{i}_{config.epochs}.h5", include_optimizer=False, save_format="h5")
 
-    model.save("unet", include_optimizer=False, save_format="h5")
+    model.save("unet.h5", include_optimizer=False, save_format="h5")

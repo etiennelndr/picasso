@@ -1,5 +1,5 @@
 optimizer: Adam
-loss: dice_loss
+loss: weighted_bce_dice_loss
 metrics: [dice_coeff, binary_accuracy]
 input_shape: [512, 512, 3]
 output_shape: [512, 512, 1]
