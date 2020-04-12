@@ -35,12 +35,14 @@ def _read_yaml_config(config_file: pathlib.Path) -> typing.Dict:
 class Config(dict):
     def __init__(self, config_file: pathlib.Path, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.update({
-            "optimizer": "Adam",
-            "loss": "binary_crossentropy",
-            "metrics": ["binary_accuracy"],
-            "input_shape": (512, 512, 3)
-        })
+        self.update(
+            {
+                "optimizer": "Adam",
+                "loss": "binary_crossentropy",
+                "metrics": ["binary_accuracy"],
+                "input_shape": (512, 512, 3),
+            }
+        )
         self.update(read_config(config_file))
 
     @property
@@ -86,20 +88,20 @@ class Config(dict):
         return self.get_property("mask_type", str)
 
     @property
-    def validation_split(self) -> float:
-        return self.get_property("validation_split", float)
-
-    @property
     def batch_size(self) -> int:
         return self.get_property("batch_size", int)
 
     @property
-    def steps(self) -> int:
-        return self.get_property("steps", int)
-
-    @property
     def epochs(self) -> int:
         return self.get_property("epochs", int)
+
+    @property
+    def training_steps(self) -> int:
+        return self.get_property("training_steps", int)
+
+    @property
+    def validation_steps(self) -> int:
+        return self.get_property("validation_steps", int)
 
     @property
     def seed(self) -> int:
@@ -110,3 +112,13 @@ class Config(dict):
         if cast_to and not isinstance(prop, cast_to):
             return cast_to(prop)
         return prop
+
+    def get_properties(self) -> typing.Dict:
+        return {
+            **self,
+            **{
+                _a: getattr(self, _a)
+                for _a in dir(self)
+                if isinstance(getattr(type(self), _a), property)
+            },
+        }

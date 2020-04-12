@@ -3,7 +3,7 @@ loss: weighted_bce_dice_loss
 metrics: [dice_coeff, binary_accuracy]
 input_shape: [512, 512, 3]
 output_shape: [512, 512, 1]
-base_kernel: 16
+base_filters: 16
 kernel_size: [3, 3]
 
 base_folder: data
@@ -13,7 +13,7 @@ image_type: .jpg
 mask_type: .png
 batch_size: 8
 epochs: 10
-steps: 5000
-validation_split: 0.1
+training_steps: 5000
+validation_steps: 500
 
 seed: 29673113

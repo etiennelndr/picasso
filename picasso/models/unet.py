@@ -20,11 +20,11 @@ def up(
     filters: int,
     kernel_size: typing.Tuple[int, ...],
     input_layer: Layer,
-    pool_size: typing.Tuple[int, ...]
+    pool_size: typing.Tuple[int, ...],
 ) -> typing.Tuple[Layer, Layer]:
-    conv = Conv2D(filters, kernel_size, padding='same')(input_layer)
+    conv = Conv2D(filters, kernel_size, padding="same")(input_layer)
     acti = Activation(tf.nn.relu)(conv)
-    conv = Conv2D(filters, kernel_size, padding='same')(acti)
+    conv = Conv2D(filters, kernel_size, padding="same")(acti)
     acti = Activation(tf.nn.relu)(conv)
     return acti, MaxPooling2D(pool_size=pool_size)(acti)
 
@@ -34,13 +34,13 @@ def down(
     kernel_size: typing.Tuple[int, ...],
     input_layer: Layer,
     up_size: typing.Tuple[int, ...],
-    conc_layer: Layer
+    conc_layer: Layer,
 ) -> Layer:
     upsp = UpSampling2D(size=up_size)(input_layer)
     conc = Concatenate(axis=3)([upsp, conc_layer])
-    conv = Conv2D(filters, kernel_size, padding='same')(conc)
+    conv = Conv2D(filters, kernel_size, padding="same")(conc)
     acti9 = Activation(tf.nn.relu)(conv)
-    conv = Conv2D(filters, kernel_size, padding='same')(acti9)
+    conv = Conv2D(filters, kernel_size, padding="same")(acti9)
     return Activation(tf.nn.relu)(conv)
 
 
@@ -51,7 +51,7 @@ def unet(
     optimizer: typing.Union[None, str, Optimizer] = None,
     loss: typing.Union[None, str, Loss] = None,
     metrics: typing.Optional[typing.List] = None,
-    print_summary: bool = True
+    print_summary: bool = True,
 ) -> Model:
     """
     U-Net model for image segmentation.
@@ -68,23 +68,23 @@ def unet(
     inputs = Input(input_shape)
 
     up1, max1 = up(filters, kernel_size, inputs, (2, 2))
-    up2, max2 = up(filters*2, kernel_size, max1, (2, 2))
-    up3, max3 = up(filters*4, kernel_size, max2, (2, 2))
-    up4, max4 = up(filters*8, kernel_size, max3, (2, 2))
+    up2, max2 = up(filters * 2, kernel_size, max1, (2, 2))
+    up3, max3 = up(filters * 4, kernel_size, max2, (2, 2))
+    up4, max4 = up(filters * 8, kernel_size, max3, (2, 2))
 
-    conv = Conv2D(filters*16, kernel_size, padding='same')(max4)
+    conv = Conv2D(filters * 16, kernel_size, padding="same")(max4)
     acti = Activation(tf.nn.relu)(conv)
-    conv = Conv2D(filters*16, kernel_size, padding='same')(acti)
+    conv = Conv2D(filters * 16, kernel_size, padding="same")(acti)
     acti = Activation(tf.nn.relu)(conv)
 
-    down1 = down(filters*8, kernel_size, acti, (2, 2), up4)
-    down2 = down(filters*4, kernel_size, down1, (2, 2), up3)
-    down3 = down(filters*2, kernel_size, down2, (2, 2), up2)
+    down1 = down(filters * 8, kernel_size, acti, (2, 2), up4)
+    down2 = down(filters * 4, kernel_size, down1, (2, 2), up3)
+    down3 = down(filters * 2, kernel_size, down2, (2, 2), up2)
     down4 = down(filters, kernel_size, down3, (2, 2), up1)
 
-    conv10 = Conv2D(2, kernel_size, padding='same')(down4)
+    conv10 = Conv2D(2, kernel_size, padding="same")(down4)
     acti10 = Activation(tf.nn.relu)(conv10)
-    conv10 = Conv2D(1, (1, 1), padding='same')(acti10)
+    conv10 = Conv2D(1, (1, 1), padding="same")(acti10)
     acti10 = Activation(tf.nn.sigmoid)(conv10)
 
     model = Model(inputs=inputs, outputs=acti10)

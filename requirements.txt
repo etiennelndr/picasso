@@ -1,2 +1,4 @@
 tensorflow-gpu==2.1.0
-Pillow
+pillow==7.1.1
+pre_commit== 2.2.0
+black==19.10b0

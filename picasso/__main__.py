@@ -1,5 +1,8 @@
+import click
 import pathlib
 
+from PIL import Image
+import numpy as np
 import tensorflow as tf
 
 from .config import Config
@@ -8,30 +11,72 @@ from .processing.preprocessing import generator
 from .processing.preprocessing import Stage
 
 
-if __name__ == '__main__':
-    print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
+@click.group()
+def main():
+    pass
 
-    config = Config(pathlib.Path("data/conf.yaml"))
-    input_shape = config.input_shape
-    base_kernel = config.get_property("base_kernel", int)
-    kernel_size = config.get_property("kernel_size", tuple)
-    metrics = config.metrics
-    loss = config.loss
 
-    model = unet(input_shape, base_kernel, kernel_size, metrics=metrics, loss=loss, print_summary=False)
+@main.command()
+@click.option("--config", "-c", "config", type=str, default="data/conf.yaml")
+@click.option("--model", "-m", "model", help="Use existing model", type=str)
+@click.option("--epochs", "-e", "epochs", type=int)
+@click.option("--start-at-epoch", "-sa", "start_at_epoch", type=int, default=0)
+def train(config, model, epochs, start_at_epoch):
+    config = Config(pathlib.Path(config))
+    epochs = epochs or config.epochs
 
-    for i in range(config.epochs):
-        print(f"Epoch {i}/{config.epochs}")
+    if model:
+        model = tf.keras.models.load_model(model)
+        if not model._is_compiled:
+            model.compile(
+                optimizer=config.optimizer,
+                loss=config.loss,
+                metrics=config.metrics,
+            )
+    else:
+        model = unet(**config.get_properties(), print_summary=False,)
+
+    for i in range(start_at_epoch, epochs):
+        print(f"Epoch {i+1}/{epochs}")
         training_generator = generator(config, Stage.Training)
         validation_generator = generator(config, Stage.Validation)
 
         model.fit(
             x=training_generator,
-            steps_per_epoch=config.steps,
+            steps_per_epoch=config.training_steps,
             validation_data=validation_generator,
-            validation_steps=int(config.steps * config.validation_split)
+            validation_steps=config.validation_steps,
         )
 
-        model.save(f"unet_{i}_{config.epochs}.h5", include_optimizer=False, save_format="h5")
+        model.save(f"unet_{i}_{epochs}.h5", save_format="h5")
 
     model.save("unet.h5", include_optimizer=False, save_format="h5")
+
+
+@main.command()
+@click.option("--config", "-c", "config", type=str, default="data/conf.yaml")
+@click.option("--image", "-i", "image", type=str)
+@click.option("--model", "-m", "model", type=str)
+def predict(config, image, model):
+    from .processing.preprocessing import keras_generator
+
+    config = Config(pathlib.Path(config))
+
+    img = tf.keras.preprocessing.image.load_img(
+        image, target_size=config.input_shape
+    )
+    x_arr = tf.keras.preprocessing.image.img_to_array(img)
+    x_arr = keras_generator.standardize(x_arr)
+    x_arr = np.expand_dims(x_arr, axis=0)
+
+    model = tf.keras.models.load_model(model, compile=False)
+    result = model.predict(x_arr)
+    result = result.squeeze(axis=0)
+    real_size = Image.open(image).size
+    result_img = tf.keras.preprocessing.image.array_to_img(result)
+    result_img = result_img.resize(real_size, Image.NEAREST)
+    result_img.save(f"result_{pathlib.Path(image).stem}.png")
+
+
+if __name__ == "__main__":
+    main()
