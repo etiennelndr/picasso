@@ -4,6 +4,7 @@ import pathlib
 from PIL import Image
 import numpy as np
 import tensorflow as tf
+from tensorflow.keras.preprocessing import image as keras_img
 
 from .config import Config
 from .models.unet import unet
@@ -57,25 +58,30 @@ def train(config, model, epochs, start_at_epoch):
 @click.option("--config", "-c", "config", type=str, default="data/conf.yaml")
 @click.option("--image", "-i", "image", type=str)
 @click.option("--model", "-m", "model", type=str)
-def predict(config, image, model):
+@click.option("--threshold", "-t", "threshold", type=float, default=0.75)
+def predict(config, image, model, threshold):
     from .processing.preprocessing import keras_generator
 
     config = Config(pathlib.Path(config))
 
-    img = tf.keras.preprocessing.image.load_img(
-        image, target_size=config.input_shape
-    )
-    x_arr = tf.keras.preprocessing.image.img_to_array(img)
-    x_arr = keras_generator.standardize(x_arr)
-    x_arr = np.expand_dims(x_arr, axis=0)
+    img = keras_img.load_img(image)
+    real_img_arr = keras_img.img_to_array(img)
+
+    resized_img = img.resize(config.input_shape[:-1], Image.NEAREST)
+    arr = keras_img.img_to_array(resized_img)
+    arr = keras_generator.standardize(arr)
+    arr = np.expand_dims(arr, axis=0)
 
     model = tf.keras.models.load_model(model, compile=False)
-    result = model.predict(x_arr)
+    result = model.predict(arr)
     result = result.squeeze(axis=0)
-    real_size = Image.open(image).size
-    result_img = tf.keras.preprocessing.image.array_to_img(result)
-    result_img = result_img.resize(real_size, Image.NEAREST)
-    result_img.save(f"result_{pathlib.Path(image).stem}.png")
+
+    result_img = keras_img.array_to_img(result)
+    result_img = result_img.resize(img.size, Image.NEAREST)
+    result_arr = keras_img.img_to_array(result_img)
+
+    real_img_arr[result_arr[:, :, 0] > threshold*255.] = [255., 255., 255.]
+    keras_img.save_img(f"result_{pathlib.Path(image).stem}.png", real_img_arr)
 
 
 if __name__ == "__main__":
