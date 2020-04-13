@@ -2,3 +2,4 @@ tensorflow-gpu==2.1.0
 pillow==7.1.1
 pre_commit== 2.2.0
 black==19.10b0
+isort==4.3.21

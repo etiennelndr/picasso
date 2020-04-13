@@ -48,7 +48,6 @@ def train(config, model, epochs, start_at_epoch):
             validation_data=validation_generator,
             validation_steps=config.validation_steps,
         )
-
         model.save(f"unet_{i}_{epochs}.h5", save_format="h5")
 
     model.save("unet.h5", include_optimizer=False, save_format="h5")
