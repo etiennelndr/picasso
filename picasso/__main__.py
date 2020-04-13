@@ -1,15 +1,14 @@
-import click
 import pathlib
 
-from PIL import Image
+import click
 import numpy as np
 import tensorflow as tf
+from PIL import Image
 from tensorflow.keras.preprocessing import image as keras_img
 
 from .config import Config
 from .models.unet import unet
-from .processing.preprocessing import generator
-from .processing.preprocessing import Stage
+from .processing.preprocessing import Stage, generator
 
 
 @click.group()
@@ -35,7 +34,7 @@ def train(config, model, epochs, start_at_epoch):
                 metrics=config.metrics,
             )
     else:
-        model = unet(**config.get_properties(), print_summary=False,)
+        model = unet(**config.get_properties(), print_summary=False)
 
     for i in range(start_at_epoch, epochs):
         print(f"Epoch {i+1}/{epochs}")
@@ -80,7 +79,11 @@ def predict(config, image, model, threshold):
     result_img = result_img.resize(img.size, Image.NEAREST)
     result_arr = keras_img.img_to_array(result_img)
 
-    real_img_arr[result_arr[:, :, 0] > threshold*255.] = [255., 255., 255.]
+    real_img_arr[result_arr[:, :, 0] > threshold * 255.0] = [
+        255.0,
+        255.0,
+        255.0,
+    ]
     keras_img.save_img(f"result_{pathlib.Path(image).stem}.png", real_img_arr)
 
 

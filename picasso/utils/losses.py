@@ -1,8 +1,8 @@
 """
 Source: https://github.com/PhotoRoom/starter-challenge-data-2020
 """
-from tensorflow.keras.losses import binary_crossentropy
 import tensorflow.keras.backend as K
+from tensorflow.keras.losses import binary_crossentropy
 
 
 def dice_loss(y_true, y_pred):

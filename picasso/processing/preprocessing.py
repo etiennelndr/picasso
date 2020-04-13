@@ -5,7 +5,6 @@ import tensorflow as tf
 
 from ..config import Config
 
-
 keras_generator = tf.keras.preprocessing.image.ImageDataGenerator(
     rescale=1.0 / 255,
     rotation_range=20,
@@ -59,8 +58,7 @@ def generator(config: Config, stage: Stage):
             x_arr = keras_generator.standardize(x_arr)
             y_arr = keras_generator.standardize(y_arr)
             if np.all(y_arr.sum(axis=-1) == y_arr[..., 0] * 3):
-                y_arr = y_arr[..., 0]
-                y_arr = np.expand_dims(y_arr, axis=-1)
+                y_arr = y_arr[..., 0:1]
             else:
                 raise ValueError(f"Bad values in {y_arr}.")
             x_arrs.append(x_arr)

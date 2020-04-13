@@ -3,8 +3,7 @@ import typing
 
 import yaml
 
-from .utils import losses
-from .utils import metrics
+from .utils import losses, metrics
 
 
 def read_config(config_file: pathlib.Path) -> typing.Dict:
@@ -35,6 +34,7 @@ def _read_yaml_config(config_file: pathlib.Path) -> typing.Dict:
 class Config(dict):
     def __init__(self, config_file: pathlib.Path, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Add default parameters
         self.update(
             {
                 "optimizer": "Adam",

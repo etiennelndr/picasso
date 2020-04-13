@@ -1,19 +1,18 @@
 import typing
 
 import tensorflow as tf
-from tensorflow.keras import Input
-from tensorflow.keras import Model
-from tensorflow.keras.layers import Activation
-from tensorflow.keras.layers import Concatenate
-from tensorflow.keras.layers import Conv2D
-from tensorflow.keras.layers import Layer
-from tensorflow.keras.layers import MaxPooling2D
-from tensorflow.keras.layers import UpSampling2D
-from tensorflow.keras.losses import BinaryCrossentropy
-from tensorflow.keras.losses import Loss
+from tensorflow.keras import Input, Model
+from tensorflow.keras.layers import (
+    Activation,
+    Concatenate,
+    Conv2D,
+    Layer,
+    MaxPooling2D,
+    UpSampling2D,
+)
+from tensorflow.keras.losses import BinaryCrossentropy, Loss
 from tensorflow.keras.metrics import BinaryAccuracy
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.optimizers import Optimizer
+from tensorflow.keras.optimizers import Adam, Optimizer
 
 
 def up(
