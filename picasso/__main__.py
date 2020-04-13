@@ -59,6 +59,7 @@ def train(config, model, epochs, start_at_epoch):
 @click.option("--model", "-m", "model", type=str)
 @click.option("--threshold", "-t", "threshold", type=float, default=0.75)
 def predict(config, image, model, threshold):
+    # Move this import at the top of this file?
     from .processing.preprocessing import keras_generator
 
     config = Config(pathlib.Path(config))
