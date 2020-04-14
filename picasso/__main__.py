@@ -9,6 +9,7 @@ from tensorflow.keras.preprocessing import image as keras_img
 from .config import Config
 from .models.unet import unet
 from .processing.preprocessing import Stage, generator
+from .server.server import app
 
 
 @click.group()
@@ -85,6 +86,13 @@ def predict(config, image, model, threshold):
         255.0,
     ]
     keras_img.save_img(f"result_{pathlib.Path(image).stem}.png", real_img_arr)
+
+
+@main.command()
+@click.option("--host", "-h", "host", required=True)
+@click.option("--port", "-p", "port", required=True)
+def server(host, port):
+    app.run(host=host, port=port, debug=True)
 
 
 if __name__ == "__main__":

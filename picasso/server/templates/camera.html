@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>Camera capture</title>
+    <script>
+        var localStream;
+        var localStreamObjUrl;
+        window.onload = function() {
+            navigator.webkitGetUserMedia("audio, video", gotStream);
+        }
+        function gotStream(stream) {
+            localStream = stream;
+            localStreamObjUrl = webkitURL.createObjectURL(localStream);
+            var video = document.getElementById("selfView");
+            video.src = localStreamObjUrl;
+        }
+    </script>
+</head>
+<body>
+    <video id="selfView" autoplay audio=muted></video>
+</body>
+</html>
