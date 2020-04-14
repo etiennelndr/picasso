@@ -92,7 +92,7 @@ def predict(config, image, model, threshold):
 @click.option("--host", "-h", "host", required=True)
 @click.option("--port", "-p", "port", required=True)
 def server(host, port):
-    app.run(host=host, port=port, debug=True)
+    app.run(host=host, port=port, debug=True, ssl_context='adhoc')
 
 
 if __name__ == "__main__":
