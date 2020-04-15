@@ -11,6 +11,7 @@ if (hasGetUserMedia()) {
 
 const constraints = {
     video: true,
+    // audio: true,  // Use audio?
 };
 
 const video = document.querySelector('video');
