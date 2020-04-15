@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/camera.css') }}" />
+		<script
+			src="https://kit.fontawesome.com/d6a9891f2a.js"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://code.jquery.com/jquery-3.4.1.min.js"
+			integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+			crossorigin="anonymous"
+		></script>
+
+		<script src="{{ url_for('static', filename='js/scroll.js') }}"></script>
+
+		<title>Web segmentation</title>
+	</head>
+	<body>
+		<header>
+			<div class="language_switch">
+				<a class="hvr-grow" href="{{ url_for('english_version') }}">english version</a>
+			</div>
+			<div class="title">
+				<h1>
+					SEGMENTATION WEB
+				</h1>
+			</div>
+			<div id="menu">
+				<ul>
+					<li class="hvr-float" onclick="scrollto('presentation');">
+						PRESENTATION
+					</li>
+					<li class="hvr-float" onclick="scrollto('segmentation');">SEGMENTATION</li>
+					<li
+						class="hvr-float"
+						onclick="scrollto('explanations');"
+					>
+						EXPLICATIONS
+					</li>
+					<li class="hvr-float" onclick="scrollto('contact');">CONTACT</li>
+				</ul>
+			</div>
+		</header>
+
+		<section class="presentation">
+			<div id="presentation">
+				<h1>
+					PRESENTATION DU PROJET
+				</h1>
+			</div>
+		</section>
+		<section class="segmentation">
+			<div id="segmentation">
+				<h1>
+					FILME L'OBJET QUE TU SOUHAITES SEGMENTER
+				</h1>
+				<div id="video">
+					<video autoplay id="video" class="center"></video>
+					<script src="{{ url_for('static', filename='js/camera.js') }}">
+					</script>
+				</div>
+			</div>
+		</section>
+		<section class="explanations">
+			<div id="explanations">
+				<h1>
+					COMMENT CELA FONCTIONNE ?
+				</h1>
+			</div>
+		</section>
+		<footer class="contact">
+			<div id="contact">
+				<h1>
+					NOUS CONTACTER
+				</h1>
+				<div class="links">
+					<a href="https://github.com/raphaellndr" target="blank_">
+						<i class="fab fa-github-square"> </i
+					></a>
+					<a
+						href="https://www.linkedin.com/in/rapha%C3%ABl-landur%C3%A9-16028a183/"
+						target="blank_"
+						><i class="fab fa-linkedin"></i
+					></a>
+					<a href="mailto:raph.landure@gmail.com">
+						<i class="fas fa-envelope"></i>
+					</a>
+				</div>
+			</div>
+		</footer>
+	</body>
+</html>

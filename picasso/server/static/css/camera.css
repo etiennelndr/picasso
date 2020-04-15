@@ -1,5 +1,6 @@
 #video {
     width: 60%;
+    top: 200px;
 }
 .center {
     display: block;
@@ -14,8 +15,10 @@
 }
 
 .title h1,
-#first_id h1,
-#second_id h1 {
+#presentation h1,
+#segmentation h1,
+#explanations h1,
+#contact h1 {
     text-align: center;
 }
 
@@ -70,13 +73,13 @@ section.presentation {
     color: black;
 }
 
-section.parcours {
+section.segmentation {
     height: 970px;
     background-color: #353946;
     color: white;
 }
 
-section.experience_professionnelle {
+section.explanations {
     height: 970px;
     background-color: white;
     color: #353946;

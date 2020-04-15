@@ -21,7 +21,7 @@
 	<body>
 		<header>
 			<div class="language_switch">
-				<a class="hvr-grow" href="index.fr.html">version française</a>
+				<a class="hvr-grow" href="{{ url_for('french_version') }}">version française</a>
 			</div>
 			<div class="title">
 				<h1>
@@ -33,12 +33,12 @@
 					<li class="hvr-float" onclick="scrollto('presentation');">
 						PRESENTATION
 					</li>
-					<li class="hvr-float" onclick="scrollto('parcours');">STUDIES</li>
+					<li class="hvr-float" onclick="scrollto('segmentation');">SEGMENTATION</li>
 					<li
 						class="hvr-float"
-						onclick="scrollto('experience_professionnelle');"
+						onclick="scrollto('explanations');"
 					>
-						PROFESSIONAL EXPERIENCES
+						EXPLANATIONS
 					</li>
 					<li class="hvr-float" onclick="scrollto('contact');">CONTACT</li>
 				</ul>
@@ -48,33 +48,33 @@
 		<section class="presentation">
 			<div id="presentation">
 				<h1>
+					PROJECT PRESENTATION
+				</h1>
+			</div>
+		</section>
+		<section class="segmentation">
+			<div id="segmentation">
+				<h1>
 					FILM WHAT YOU WANT TO SEGMENTATE
 				</h1>
-			</div>
-			<div id="video">
-				<video autoplay id="video" class="center"></video>
-				<script src="{{ url_for('static', filename='js/camera.js') }}">
-				</script>
-			</div>
-		</section>
-		<section class="parcours">
-			<div id="parcours">
-				<h1>
-					MY PATH
-				</h1>
+				<div id="video">
+					<video autoplay id="video" class="center"></video>
+					<script src="{{ url_for('static', filename='js/camera.js') }}">
+					</script>
+				</div>
 			</div>
 		</section>
-		<section class="experience_professionnelle">
-			<div id="experience_professionnelle">
+		<section class="explanations">
+			<div id="explanations">
 				<h1>
-					MY PROFESSIONAL EXPERIENCES
+					HOW DOES IT WORK ?
 				</h1>
 			</div>
 		</section>
 		<footer class="contact">
 			<div id="contact">
 				<h1>
-					MY CONTACTS
+					GET IN TOUCH WITH US
 				</h1>
 				<div class="links">
 					<a href="https://github.com/raphaellndr" target="blank_">
