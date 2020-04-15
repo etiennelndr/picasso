@@ -11,7 +11,6 @@ if (hasGetUserMedia()) {
 
 const constraints = {
     video: true,
-    // audio: true,  // Use audio?
 };
 
 const video = document.querySelector('video');
@@ -21,7 +20,6 @@ navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
 });
 
 const videoElement = document.querySelector('video');
-const audioSelect = document.querySelector('select#audioSource');
 const videoSelect = document.querySelector('select#videoSource');
 
 navigator.mediaDevices
@@ -30,7 +28,6 @@ navigator.mediaDevices
     .then(getStream)
     .catch(handleError);
 
-audioSelect.onchange = getStream;
 videoSelect.onchange = getStream;
 
 function gotDevices(deviceInfos) {
@@ -38,11 +35,7 @@ function gotDevices(deviceInfos) {
         const deviceInfo = deviceInfos[i];
         const option = document.createElement('option');
         option.value = deviceInfo.deviceId;
-        if (deviceInfo.kind === 'audioinput') {
-            option.text =
-                deviceInfo.label || 'microphone ' + (audioSelect.length + 1);
-            audioSelect.appendChild(option);
-        } else if (deviceInfo.kind === 'videoinput') {
+        if (deviceInfo.kind === 'videoinput') {
             option.text =
                 deviceInfo.label || 'camera ' + (videoSelect.length + 1);
             videoSelect.appendChild(option);
@@ -60,9 +53,6 @@ function getStream() {
     }
 
     const constraints = {
-        audio: {
-            deviceId: { exact: audioSelect.value },
-        },
         video: {
             deviceId: { exact: videoSelect.value },
         },

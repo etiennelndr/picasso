@@ -21,7 +21,7 @@
 	<body>
 		<header>
 			<div class="language_switch">
-				<a class="hvr-grow" href="{{ url_for('english_version') }}">english version</a>
+				<a class="hvr-grow" href="{{ url_for('camera', language='en') }}">Version anglaise</a>
 			</div>
 			<div class="title">
 				<h1>
@@ -59,7 +59,6 @@
 				</h1>
 				<div id="video">
 					<video autoplay id="video" class="center"></video>
-					<select id='audioSource' style="width: 208px;"></select>
 					<select id='videoSource' style="width: 208px;"></select>
 					<script src="{{ url_for('static', filename='js/camera.js') }}">
 					</script>
