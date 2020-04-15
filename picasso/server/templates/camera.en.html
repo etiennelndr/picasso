@@ -21,7 +21,7 @@
 	<body>
 		<header>
 			<div class="language_switch">
-				<a class="hvr-grow" href="{{ url_for('french_version') }}">version française</a>
+				<a class="hvr-grow" href="{{ url_for('camera', language='fr') }}">French version</a>
 			</div>
 			<div class="title">
 				<h1>
@@ -59,10 +59,11 @@
 		<section class="segmentation">
 			<div id="segmentation">
 				<h1>
-					FILM WHAT YOU WANT TO SEGMENTATE
+					FILM WHAT YOU WANT TO SEGMENT
 				</h1>
 				<div id="video">
 					<video autoplay id="video" class="center"></video>
+					<select id='videoSource' style="width: 208px;"></select>
 					<script src="{{ url_for('static', filename='js/camera.js') }}">
 					</script>
 				</div>
