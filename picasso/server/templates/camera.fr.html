@@ -24,23 +24,28 @@
 				<a class="hvr-grow" href="{{ url_for('english_version') }}">english version</a>
 			</div>
 			<div class="title">
-				<h1>
-					SEGMENTATION WEB
+				<h1 class="noselect">
+					SEGMENTATION EN TEMPS REEL
 				</h1>
 			</div>
 			<div id="menu">
 				<ul>
 					<li class="hvr-float" onclick="scrollto('presentation');">
-						PRESENTATION
+                        <span class="noselect">PRESENTATION</span>
 					</li>
-					<li class="hvr-float" onclick="scrollto('segmentation');">SEGMENTATION</li>
+					<li class="hvr-float" onclick="scrollto('segmentation');">
+                        <span class="noselect">SEGMENTATION</span>
+                    </li>
 					<li
 						class="hvr-float"
+                        class="noselect"
 						onclick="scrollto('explanations');"
 					>
-						EXPLICATIONS
+                        <span class="noselect">EXPLICATIONS</span>
 					</li>
-					<li class="hvr-float" onclick="scrollto('contact');">NOUS CONTACTER</li>
+					<li class="hvr-float" onclick="scrollto('contact');">
+                        <span class="noselect">NOUS CONTACTER</span>
+                    </li>
 				</ul>
 			</div>
 		</header>
@@ -61,7 +66,9 @@
 					<video autoplay id="video" class="center"></video>
 					<script src="{{ url_for('static', filename='js/camera.js') }}">
 					</script>
+					<p><button class="capture-button">Capture video</button>
 				</div>
+
 			</div>
 		</section>
 		<section class="explanations">
