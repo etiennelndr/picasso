@@ -1,4 +1,5 @@
 import pathlib
+import ssl
 
 import click
 import numpy as np
@@ -89,10 +90,37 @@ def predict(config, image, model, threshold):
 
 
 @main.command()
-@click.option("--host", "-h", "host", required=True)
-@click.option("--port", "-p", "port", required=True)
+@click.option("--host", "-h", "host", type=str, required=True)
+@click.option("--port", "-p", "port", type=int, default="12400")
 def server(host, port):
-    app.run(host=host, port=port, debug=True, ssl_context='adhoc')
+    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    ssl_context.load_cert_chain(certfile=pathlib.Path('mycert.pem'))
+    app.run(host=host, port=port, debug=True, ssl_context=ssl_context)
+
+
+@main.command()
+@click.option("--host", "-h", "host", type=str, required=True)
+@click.option("--port", "-p", "port", type=int, default="12500")
+def webserver(host, port):
+    import asyncio
+    import websockets
+
+    async def hello(websocket, path):
+        print(path)
+        name = await websocket.recv()
+        print(f"< {name}")
+
+        greeting = f"Hello {name}!"
+
+        await websocket.send(greeting)
+        print(f"> {greeting}")
+
+    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    ssl_context.load_cert_chain(certfile=pathlib.Path('mycert.pem'))
+    start_server = websockets.serve(hello, host, port, ssl=ssl_context)
+
+    asyncio.get_event_loop().run_until_complete(start_server)
+    asyncio.get_event_loop().run_forever()
 
 
 if __name__ == "__main__":
