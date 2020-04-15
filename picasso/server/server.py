@@ -3,14 +3,15 @@ import flask
 
 app = flask.Flask(__name__)
 
+LANGUAGES = {
+    "en": "english",
+    "fr": "french"
+}
 
-@app.route("/camera.en")
-def english_version():
-    print("switching_to_english_version")
-    return flask.render_template("camera.en.html")
 
-
-@app.route('/camera.fr')
-def french_version():
-    print("switching_to_french_version")
-    return flask.render_template("camera.fr.html")
+@app.route('/camera/<language>')
+def camera(language: str):
+    if language not in LANGUAGES:
+        flask.abort(404, f"Unsupported language: {language}.")
+    print(f"switching_to_{LANGUAGES[language]}_version")
+    return flask.render_template(f"camera.{language}.html")
