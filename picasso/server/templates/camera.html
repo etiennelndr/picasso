@@ -3,109 +3,93 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/camera.css') }}" />
+		<script
+			src="https://kit.fontawesome.com/d6a9891f2a.js"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://code.jquery.com/jquery-3.4.1.min.js"
+			integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+			crossorigin="anonymous"
+		></script>
 
-		<video autoplay id="video" class="center"></video>
+		<script src="{{ url_for('static', filename='js/scroll.js') }}"></script>
 
-		<style>
-			#video {
-				width: 40%;
-				length: 40%;
-			}
-			.center {
-  				display: block;
-  				margin-left: auto;
-  				margin-right: auto;
-  				width: 50%;
-			}
-		</style>
-
-		<script>
-			function hasGetUserMedia() {
-				return !!(
-					navigator.mediaDevices && navigator.mediaDevices.getUserMedia
-				);
-			}
-			if (hasGetUserMedia()) {
-				// Good to go!
-			} else {
-				alert('getUserMedia() is not supported by your browser');
-			}
-
-			const constraints = {
-				video: true,
-			};
-
-			const video = document.querySelector('video');
-
-			navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-				video.srcObject = stream;
-			});
-
-			const videoElement = document.querySelector('video');
-			const audioSelect = document.querySelector('select#audioSource');
-			const videoSelect = document.querySelector('select#videoSource');
-
-			navigator.mediaDevices
-				.enumerateDevices()
-				.then(gotDevices)
-				.then(getStream)
-				.catch(handleError);
-
-			audioSelect.onchange = getStream;
-			videoSelect.onchange = getStream;
-
-			function gotDevices(deviceInfos) {
-				for (let i = 0; i !== deviceInfos.length; ++i) {
-					const deviceInfo = deviceInfos[i];
-					const option = document.createElement('option');
-					option.value = deviceInfo.deviceId;
-					if (deviceInfo.kind === 'audioinput') {
-						option.text =
-							deviceInfo.label || 'microphone ' + (audioSelect.length + 1);
-						audioSelect.appendChild(option);
-					} else if (deviceInfo.kind === 'videoinput') {
-						option.text =
-							deviceInfo.label || 'camera ' + (videoSelect.length + 1);
-						videoSelect.appendChild(option);
-					} else {
-						console.log('Found another kind of device: ', deviceInfo);
-					}
-				}
-			}
-
-			function getStream() {
-				if (window.stream) {
-					window.stream.getTracks().forEach(function (track) {
-						track.stop();
-					});
-				}
-
-				const constraints = {
-					audio: {
-						deviceId: { exact: audioSelect.value },
-					},
-					video: {
-						deviceId: { exact: videoSelect.value },
-					},
-				};
-
-				navigator.mediaDevices
-					.getUserMedia(constraints)
-					.then(gotStream)
-					.catch(handleError);
-			}
-
-			function gotStream(stream) {
-				window.stream = stream; // make stream available to console
-				videoElement.srcObject = stream;
-			}
-
-			function handleError(error) {
-				console.error('Error: ', error);
-			}
-		</script>
-
-		<title>Camera</title>
+		<title>Web segmentation</title>
 	</head>
-	<body></body>
+	<body>
+		<header>
+			<div class="language_switch">
+				<a class="hvr-grow" href="index.fr.html">version française</a>
+			</div>
+			<div class="title">
+				<h1>
+					WEB SEGMENTATION
+				</h1>
+			</div>
+			<div id="menu">
+				<ul>
+					<li class="hvr-float" onclick="scrollto('presentation');">
+						PRESENTATION
+					</li>
+					<li class="hvr-float" onclick="scrollto('parcours');">STUDIES</li>
+					<li
+						class="hvr-float"
+						onclick="scrollto('experience_professionnelle');"
+					>
+						PROFESSIONAL EXPERIENCES
+					</li>
+					<li class="hvr-float" onclick="scrollto('contact');">CONTACT</li>
+				</ul>
+			</div>
+		</header>
+
+		<section class="presentation">
+			<div id="presentation">
+				<h1>
+					FILM WHAT YOU WANT TO SEGMENTATE
+				</h1>
+			</div>
+			<div id="video">
+				<video autoplay id="video" class="center"></video>
+				<script src="{{ url_for('static', filename='js/camera.js') }}">
+				</script>
+			</div>
+		</section>
+		<section class="parcours">
+			<div id="parcours">
+				<h1>
+					MY PATH
+				</h1>
+			</div>
+		</section>
+		<section class="experience_professionnelle">
+			<div id="experience_professionnelle">
+				<h1>
+					MY PROFESSIONAL EXPERIENCES
+				</h1>
+			</div>
+		</section>
+		<footer class="contact">
+			<div id="contact">
+				<h1>
+					MY CONTACTS
+				</h1>
+				<div class="links">
+					<a href="https://github.com/raphaellndr" target="blank_">
+						<i class="fab fa-github-square"> </i
+					></a>
+					<a
+						href="https://www.linkedin.com/in/rapha%C3%ABl-landur%C3%A9-16028a183/"
+						target="blank_"
+						><i class="fab fa-linkedin"></i
+					></a>
+					<a href="mailto:raph.landure@gmail.com">
+						<i class="fas fa-envelope"></i>
+					</a>
+				</div>
+			</div>
+		</footer>
+	</body>
 </html>

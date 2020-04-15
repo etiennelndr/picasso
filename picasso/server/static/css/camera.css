@@ -1,0 +1,119 @@
+#video {
+    width: 60%;
+}
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+* {
+    margin: 0 auto;
+    padding: 10;
+    -webkit-backface-visibility: hidden;
+}
+
+.title h1,
+#first_id h1,
+#second_id h1 {
+    text-align: center;
+}
+
+header .language_switch {
+    text-align: right;
+    margin-right: 10px;
+    height: 50px;
+}
+
+header .language_switch a {
+    color: white;
+    text-decoration: none;
+}
+
+header .language_switch a:visited {
+    color: white;
+}
+
+body {
+    font-family: proxima-nova;
+}
+
+header {
+    width: 100%;
+    margin: 0px auto;
+    padding: 0px;
+    height: 185px;
+    line-height: 70px;
+    background-color: #353946;
+    color: white;
+    text-align: center;
+}
+
+header li {
+    display: inline-block;
+    margin-right: 25px;
+    font-size: 17px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    list-style-position: inside;
+    border-width: 1px 3px 1px 3px;
+}
+
+header li:hover {
+    color: rgba(228, 140, 26, 0.863);
+}
+
+section.presentation {
+    height: 785px;
+    background-color: white;
+    color: black;
+}
+
+section.parcours {
+    height: 970px;
+    background-color: #353946;
+    color: white;
+}
+
+section.experience_professionnelle {
+    height: 970px;
+    background-color: white;
+    color: #353946;
+}
+
+footer.contact {
+    height: 200px;
+    background-color: #353946;
+    color: white;
+}
+
+.links {
+    text-align: center;
+    display: inline-block;
+}
+
+.fa-github-square {
+    font-size: 3rem;
+    color: white;
+}
+
+.fa-linkedin {
+    font-size: 3rem;
+    color: white;
+}
+
+.fa-envelope {
+    font-size: 3rem;
+    color: white;
+}
+
+/* MEDIA QUERIES */
+
+/* tablets */
+@media screen and (max-width: 768px) {
+}
+
+/* mobiles */
+@media screen and (max-width: 480px) {
+}
