@@ -8,7 +8,7 @@
                                   supported by Chrome, Opera and Firefox */
 }
 #video {
-    width: 60%;
+    width: 80%;
     top: 200px;
 }
 .center {
@@ -126,6 +126,9 @@ footer.contact {
 @media screen and (max-width: 768px) {
     header {
         height: 250px;
+    }
+    header.title h1 {
+        font-size: 25px;
     }
 }
 
