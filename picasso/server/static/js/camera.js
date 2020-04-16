@@ -13,6 +13,27 @@ const constraints = {
     video: true,
 };
 
+console.log(window);
+console.log('WebSocket' in window);
+if('WebSocket' in window){
+    connect('wss://192.168.1.42:12500/');
+} else {
+    alert ('web sockets not supported');
+}
+
+function connect(host) {
+    ws = new WebSocket(host);
+    ws.onopen = function () {
+        log('connected');
+    };
+    ws.onclose = function () {
+        log('socket closed');
+    };
+    ws.onerror = function (evt) {
+        log('<span style="color: red;">ERROR:</span> ' + evt.data);
+    };
+};
+
 const video = document.querySelector('video');
 
 navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
