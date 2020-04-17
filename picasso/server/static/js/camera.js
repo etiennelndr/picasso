@@ -9,9 +9,6 @@ if (hasGetUserMedia()) {
     alert('getUserMedia() is not supported by your browser');
 }
 
-const constraints = {
-    video: true,
-};
 
 console.log(window);
 console.log('WebSocket' in window);
@@ -34,11 +31,6 @@ function connect(host) {
     };
 };
 
-const video = document.querySelector('video');
-
-navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-    video.srcObject = stream;
-});
 
 const videoElement = document.querySelector('video');
 const videoSelect = document.querySelector('select#videoSource');
