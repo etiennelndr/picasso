@@ -15,6 +15,7 @@
 		></script>
 
 		<script src="{{ url_for('static', filename='js/scroll.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/websockets.js') }}"></script>
 
 		<title>Web segmentation</title>
 	</head>
@@ -64,8 +65,7 @@
 				<div id="video">
 					<video autoplay id="video" class="center"></video>
 					<select id='videoSource' style="width: 208px;"></select>
-					<script src="{{ url_for('static', filename='js/camera.js') }}">
-					</script>
+					<script src="{{ url_for('static', filename='js/camera.js') }}"></script>
 				</div>
 			</div>
 		</section>

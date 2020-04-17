@@ -105,22 +105,50 @@ def webserver(host, port):
     import asyncio
     import websockets
 
-    async def hello(websocket, path):
-        print(path)
-        name = await websocket.recv()
-        print(f"< {name}")
+    async def hello(websocket: websockets.WebSocketServerProtocol, path):
+        print(f"New wbsocket with path {path}")
+        msg = "EMPTY"
+        while msg != "":
+            msg = await websocket.recv()
+            print(f" > {msg}")
 
-        greeting = f"Hello {name}!"
-
-        await websocket.send(greeting)
-        print(f"> {greeting}")
+            response = f"Received: {msg}"
+            await websocket.send(response)
 
     ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     ssl_context.load_cert_chain(certfile=pathlib.Path('mycert.pem'))
-    start_server = websockets.serve(hello, host, port, ssl=ssl_context)
+    start_server = websockets.serve(hello, host, port, ssl=ssl_context, extra_headers=(("Connection", "open"),))
 
     asyncio.get_event_loop().run_until_complete(start_server)
     asyncio.get_event_loop().run_forever()
+
+
+@main.command()
+@click.option("--host", "-h", "host", type=str, required=True)
+@click.option("--port", "-p", "port", type=int, default="12500")
+def webclient(host, port):
+    import asyncio
+    import pathlib
+    import ssl
+    import websockets
+
+    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    ssl_context.load_verify_locations(pathlib.Path('mycert.pem'))
+
+    async def hello():
+        uri = f"wss://{host}:{port}"
+        async with websockets.connect(uri, ssl=ssl_context) as websocket:
+            name = input("What's your name? ")
+
+            await websocket.send(name)
+            print(f"> {name}")
+
+            greeting = await websocket.recv()
+            print(f"< {greeting}")
+
+            await websocket.send("")
+
+    asyncio.get_event_loop().run_until_complete(hello())
 
 
 if __name__ == "__main__":

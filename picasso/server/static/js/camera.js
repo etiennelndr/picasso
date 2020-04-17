@@ -9,29 +9,6 @@ if (hasGetUserMedia()) {
     alert('getUserMedia() is not supported by your browser');
 }
 
-
-console.log(window);
-console.log('WebSocket' in window);
-if('WebSocket' in window){
-    connect('wss://192.168.1.42:12500/');
-} else {
-    alert ('web sockets not supported');
-}
-
-function connect(host) {
-    ws = new WebSocket(host);
-    ws.onopen = function () {
-        log('connected');
-    };
-    ws.onclose = function () {
-        log('socket closed');
-    };
-    ws.onerror = function (evt) {
-        log('<span style="color: red;">ERROR:</span> ' + evt.data);
-    };
-};
-
-
 const videoElement = document.querySelector('video');
 const videoSelect = document.querySelector('select#videoSource');
 
@@ -56,7 +33,7 @@ function gotDevices(deviceInfos) {
             console.log('Found another kind of device: ', deviceInfo);
         }
     }
-}
+};
 
 function getStream() {
     if (window.stream) {
@@ -80,8 +57,25 @@ function getStream() {
 function gotStream(stream) {
     window.stream = stream; // make stream available to console
     videoElement.srcObject = stream;
-}
+};
 
 function handleError(error) {
     console.error('Error: ', error);
+};
+
+
+if('WebSocket' in window) {
+    connect('wss://192.168.1.42:12500/');
+} else {
+    alert('Web sockets are not supported.');
 }
+
+setInterval(function() {
+    send("YOLO");
+}, 500);
+
+navigator.mediaDevices
+    .enumerateDevices()
+    .then(gotDevices)
+    .then(getStream)
+    .catch(handleError);

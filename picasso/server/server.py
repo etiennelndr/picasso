@@ -17,7 +17,7 @@ def camera(language: str):
 
     template = flask.render_template(f"camera.{language}.html", cache_timeout=0)
     response = flask.make_response(template)
-    # Sometimes, webbrowsers store all files in the cache. In order to avoid
+    # Sometimes, web browsers store all files in the cache. In order to avoid
     # this behaviour, change the HTTP header with the following instructions.
     response.headers["Cache-Control"] = "no-cache, no-store," \
                                         "must-revalidate, max-age=0"
