@@ -1,0 +1,16 @@
+repos:
+  - repo: local
+    hooks:
+    - id: black
+      name: black
+      stages: [commit]
+      language: system
+      entry: python -m black
+      args: [picasso]
+
+    - id: isort
+      name: isort
+      stages: [commit]
+      language: system
+      entry: python -m isort
+      args: [-rc, picasso]
