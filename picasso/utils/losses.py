@@ -6,6 +6,12 @@ from tensorflow.keras.losses import binary_crossentropy
 
 
 def dice_loss(y_true, y_pred):
+    """
+
+    :param y_true:
+    :param y_pred:
+    :return:
+    """
     smooth = 1.0
     y_true_f = K.flatten(y_true)
     y_pred_f = K.flatten(y_pred)
@@ -17,16 +23,35 @@ def dice_loss(y_true, y_pred):
 
 
 def bce_dice_loss(y_true, y_pred):
+    """
+
+    :param y_true:
+    :param y_pred:
+    :return:
+    """
     return binary_crossentropy(y_true, y_pred) + dice_loss(y_true, y_pred)
 
 
 def bce_logdice_loss(y_true, y_pred):
+    """
+
+    :param y_true:
+    :param y_pred:
+    :return:
+    """
     return binary_crossentropy(y_true, y_pred) - K.log(
         1.0 - dice_loss(y_true, y_pred)
     )
 
 
 def weighted_bce_loss(y_true, y_pred, weight):
+    """
+
+    :param y_true:
+    :param y_pred:
+    :param weight:
+    :return:
+    """
     epsilon = 1e-7
     y_pred = K.clip(y_pred, epsilon, 1.0 - epsilon)
     logit_y_pred = K.log(y_pred / (1.0 - y_pred))
@@ -39,6 +64,13 @@ def weighted_bce_loss(y_true, y_pred, weight):
 
 
 def weighted_dice_loss(y_true, y_pred, weight):
+    """
+
+    :param y_true:
+    :param y_pred:
+    :param weight:
+    :return:
+    """
     smooth = 1.0
     w, m1, m2 = weight, y_true, y_pred
     intersection = m1 * m2
@@ -49,6 +81,12 @@ def weighted_dice_loss(y_true, y_pred, weight):
 
 
 def weighted_bce_dice_loss(y_true, y_pred):
+    """
+
+    :param y_true:
+    :param y_pred:
+    :return:
+    """
     y_true = K.cast(y_true, "float32")
     y_pred = K.cast(y_pred, "float32")
     # If we want to get same size of output, kernel size must be odd.

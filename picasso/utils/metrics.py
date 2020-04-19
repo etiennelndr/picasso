@@ -5,6 +5,12 @@ import tensorflow.keras.backend as K
 
 
 def dice_coeff(y_true, y_pred):
+    """
+
+    :param y_true:
+    :param y_pred:
+    :return:
+    """
     y_true_f = K.flatten(y_true)
     y_pred = K.cast(y_pred, "float32")
     y_pred_f = K.cast(K.greater(K.flatten(y_pred), 0.5), "float32")

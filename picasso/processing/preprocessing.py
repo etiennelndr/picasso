@@ -21,6 +21,11 @@ class Stage(enum.Enum):
 
 
 def generator(config: Config, stage: Stage):
+    """
+
+    :param config:
+    :param stage:
+    """
     base_folder = config.base_folder / stage.value
     x_folder = base_folder / config.image_folder
     y_folder = base_folder / config.mask_folder

@@ -21,6 +21,14 @@ def up(
     input_layer: Layer,
     pool_size: typing.Tuple[int, ...],
 ) -> typing.Tuple[Layer, Layer]:
+    """
+
+    :param filters:
+    :param kernel_size:
+    :param input_layer:
+    :param pool_size:
+    :return:
+    """
     conv = Conv2D(filters, kernel_size, padding="same")(input_layer)
     acti = Activation(tf.nn.relu)(conv)
     conv = Conv2D(filters, kernel_size, padding="same")(acti)
@@ -35,6 +43,15 @@ def down(
     up_size: typing.Tuple[int, ...],
     conc_layer: Layer,
 ) -> Layer:
+    """
+
+    :param filters:
+    :param kernel_size:
+    :param input_layer:
+    :param up_size:
+    :param conc_layer:
+    :return:
+    """
     upsp = UpSampling2D(size=up_size)(input_layer)
     conc = Concatenate(axis=3)([upsp, conc_layer])
     conv = Conv2D(filters, kernel_size, padding="same")(conc)
@@ -56,6 +73,15 @@ def unet(
     U-Net model for image segmentation.
 
     Source: https://arxiv.org/abs/1505.04597
+
+    :param input_shape:
+    :param filters:
+    :param kernel_size:
+    :param optimizer:
+    :param loss:
+    :param metrics:
+    :param print_summary:
+    :return:
     """
     if not optimizer:
         optimizer = Adam()

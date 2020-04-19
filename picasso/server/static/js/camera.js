@@ -70,12 +70,38 @@ if('WebSocket' in window) {
     alert('Web sockets are not supported.');
 }
 
-setInterval(function() {
-    send("YOLO");
-}, 500);
+var back = document.createElement('canvas');
+var backcontext = back.getContext('2d');
 
-navigator.mediaDevices
-    .enumerateDevices()
-    .then(gotDevices)
-    .then(getStream)
-    .catch(handleError);
+var attempts = 0;
+function checkFlag() {
+    if (videoElement.videoWidth == 0 || videoElement.videoHeight == 0) {
+        window.setTimeout(checkFlag, 100);
+    } else {
+        if (attempts++ < 10) {
+            console.log(attempts)
+            sendFrames();
+        }
+    }
+}
+checkFlag();
+
+function sendFrames() {
+    back.width = videoElement.videoWidth
+    back.height = videoElement.videoHeight
+
+    console.log(back.width, back.height)
+
+    segmentedFrame = document.getElementById('segmentedFrame');
+    console.log(segmentedFrame)
+    console.log(segmentedFrame.width)
+    console.log(segmentedFrame.height)
+    segmentedFrame.width = videoElement.videoWidth
+    segmentedFrame.height = videoElement.videoHeight
+
+    setInterval(function() {
+        backcontext.drawImage(videoElement, 0, 0);
+        var stringData=back.toDataURL('image/jpeg');
+        send(stringData);
+    }, 50);
+}

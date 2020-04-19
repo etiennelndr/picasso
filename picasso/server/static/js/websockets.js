@@ -1,5 +1,7 @@
+var ws;
 function connect(host) {
     ws = new WebSocket(host);
+    ws.binaryType = 'arraybuffer';
     ws.onopen = function () {
         console.log('connected');
     };
@@ -10,7 +12,7 @@ function connect(host) {
         console.log('<span style="color: red;">ERROR:</span> ' + evt.data);
     };
     ws.onmessage = function(evt) {
-        console.log('Received data: ' + evt.data);
+        segmentedFrame.src = evt.data;
     }
 };
 
@@ -18,7 +20,7 @@ function send(msg){
     if (ws != null) { 
         if(ws.readyState === 1) {
             ws.send(msg);
-        }       
+        }
     } else {
         console.log('not ready yet');
     }

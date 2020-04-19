@@ -1,5 +1,11 @@
+import asyncio
+import base64
+import binascii
+import imghdr
 import pathlib
+import socket
 import ssl
+import websockets
 
 import click
 import numpy as np
@@ -24,6 +30,13 @@ def main():
 @click.option("--epochs", "-e", "epochs", type=int)
 @click.option("--start-at-epoch", "-sa", "start_at_epoch", type=int, default=0)
 def train(config, model, epochs, start_at_epoch):
+    """
+
+    :param config:
+    :param model:
+    :param epochs:
+    :param start_at_epoch:
+    """
     config = Config(pathlib.Path(config))
     epochs = epochs or config.epochs
 
@@ -60,6 +73,13 @@ def train(config, model, epochs, start_at_epoch):
 @click.option("--model", "-m", "model", type=str)
 @click.option("--threshold", "-t", "threshold", type=float, default=0.75)
 def predict(config, image, model, threshold):
+    """
+
+    :param config:
+    :param image:
+    :param model:
+    :param threshold:
+    """
     # Move this import at the top of this file?
     from .processing.preprocessing import keras_generator
 
@@ -90,30 +110,70 @@ def predict(config, image, model, threshold):
 
 
 @main.command()
-@click.option("--host", "-h", "host", type=str, required=True)
+@click.option("--host", "-h", "host", type=str)
 @click.option("--port", "-p", "port", type=int, default="12400")
 def server(host, port):
+    """
+
+    :param host:
+    :param port:
+    """
+    if not host:
+        hostname = socket.gethostname()
+        host = socket.gethostbyname(hostname)
+
     ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     ssl_context.load_cert_chain(certfile=pathlib.Path('mycert.pem'))
     app.run(host=host, port=port, debug=True, ssl_context=ssl_context)
 
 
 @main.command()
-@click.option("--host", "-h", "host", type=str, required=True)
+@click.option("--host", "-h", "host", type=str)
 @click.option("--port", "-p", "port", type=int, default="12500")
 def webserver(host, port):
-    import asyncio
-    import websockets
+    """
+
+    :param host:
+    :param port:
+    """
+    if not host:
+        hostname = socket.gethostname()
+        host = socket.gethostbyname(hostname)
 
     async def hello(websocket: websockets.WebSocketServerProtocol, path):
-        print(f"New wbsocket with path {path}")
-        msg = "EMPTY"
-        while msg != "":
-            msg = await websocket.recv()
-            print(f" > {msg}")
+        """
 
-            response = f"Received: {msg}"
-            await websocket.send(response)
+        :param websocket:
+        :param path:
+        """
+        print(f"New websocket with path {path}")
+        msg = ""
+        filename = "test.png"
+        while msg != "STOP":
+            msg = await websocket.recv()
+            ctx, _msg = msg.split(",")
+            _msg = _msg.encode()
+
+            filepath = pathlib.Path(filename)
+            try:
+                result = base64.decodebytes(_msg)
+                with open(filename, "wb") as img_file:
+                    img_file.write(result)
+                # If this file is not really an image, don't send it back.
+                if not imghdr.what(filename):
+                    raise ValueError("Invalid image.")
+            except (binascii.Error, ValueError) as err:
+                print(err)
+            else:
+                # Send back the same image without any changes.
+                b64_result = base64.encodebytes(result)
+                b64_result = b64_result.decode().replace("\n", "").encode()
+                assert f"{ctx},{b64_result.decode()}" == msg
+                await websocket.send(f"{ctx},{b64_result.decode()}")
+            finally:
+                # if filepath.exists():
+                #    filepath.unlink()
+                pass
 
     ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     ssl_context.load_cert_chain(certfile=pathlib.Path('mycert.pem'))
@@ -121,34 +181,6 @@ def webserver(host, port):
 
     asyncio.get_event_loop().run_until_complete(start_server)
     asyncio.get_event_loop().run_forever()
-
-
-@main.command()
-@click.option("--host", "-h", "host", type=str, required=True)
-@click.option("--port", "-p", "port", type=int, default="12500")
-def webclient(host, port):
-    import asyncio
-    import pathlib
-    import ssl
-    import websockets
-
-    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-    ssl_context.load_verify_locations(pathlib.Path('mycert.pem'))
-
-    async def hello():
-        uri = f"wss://{host}:{port}"
-        async with websockets.connect(uri, ssl=ssl_context) as websocket:
-            name = input("What's your name? ")
-
-            await websocket.send(name)
-            print(f"> {name}")
-
-            greeting = await websocket.recv()
-            print(f"< {greeting}")
-
-            await websocket.send("")
-
-    asyncio.get_event_loop().run_until_complete(hello())
 
 
 if __name__ == "__main__":
