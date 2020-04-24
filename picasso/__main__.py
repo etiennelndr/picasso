@@ -1,11 +1,5 @@
-import asyncio
-import base64
-import binascii
-import imghdr
 import pathlib
 import socket
-import ssl
-import websockets
 
 import click
 import numpy as np
@@ -122,65 +116,13 @@ def server(host, port):
         hostname = socket.gethostname()
         host = socket.gethostbyname(hostname)
 
-    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-    ssl_context.load_cert_chain(certfile=pathlib.Path('mycert.pem'))
-    app.run(host=host, port=port, debug=True, ssl_context=ssl_context)
-
-
-@main.command()
-@click.option("--host", "-h", "host", type=str)
-@click.option("--port", "-p", "port", type=int, default="12500")
-def webserver(host, port):
-    """
-
-    :param host:
-    :param port:
-    """
-    if not host:
-        hostname = socket.gethostname()
-        host = socket.gethostbyname(hostname)
-
-    async def hello(websocket: websockets.WebSocketServerProtocol, path):
-        """
-
-        :param websocket:
-        :param path:
-        """
-        print(f"New websocket with path {path}")
-        msg = ""
-        filename = "test.png"
-        while msg != "STOP":
-            msg = await websocket.recv()
-            ctx, _msg = msg.split(",")
-            _msg = _msg.encode()
-
-            filepath = pathlib.Path(filename)
-            try:
-                result = base64.decodebytes(_msg)
-                with open(filename, "wb") as img_file:
-                    img_file.write(result)
-                # If this file is not really an image, don't send it back.
-                if not imghdr.what(filename):
-                    raise ValueError("Invalid image.")
-            except (binascii.Error, ValueError) as err:
-                print(err)
-            else:
-                # Send back the same image without any changes.
-                b64_result = base64.encodebytes(result)
-                b64_result = b64_result.decode().replace("\n", "").encode()
-                assert f"{ctx},{b64_result.decode()}" == msg
-                await websocket.send(f"{ctx},{b64_result.decode()}")
-            finally:
-                # if filepath.exists():
-                #    filepath.unlink()
-                pass
-
-    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-    ssl_context.load_cert_chain(certfile=pathlib.Path('mycert.pem'))
-    start_server = websockets.serve(hello, host, port, ssl=ssl_context, extra_headers=(("Connection", "open"),))
-
-    asyncio.get_event_loop().run_until_complete(start_server)
-    asyncio.get_event_loop().run_forever()
+    app.run(
+        host=host,
+        port=port,
+        debug=True,
+        certfile=pathlib.Path('cert.pem'),
+        keyfile=pathlib.Path('key.pem')
+    )
 
 
 if __name__ == "__main__":

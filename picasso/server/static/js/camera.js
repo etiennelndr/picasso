@@ -65,7 +65,7 @@ function handleError(error) {
 
 
 if('WebSocket' in window) {
-    connect('wss://192.168.1.42:12500/');
+    connect('wss://192.168.1.42:12400/predict');
 } else {
     alert('Web sockets are not supported.');
 }
