@@ -63,16 +63,20 @@
 				<h1>
 					FILME L'OBJET QUE TU SOUHAITES SEGMENTER
 				</h1>
-				<div id="video">
+				<div class="video">
 					<video autoplay id="video" class="center"></video>
 					<select id='videoSource' style="width: 208px;"></select>
 					<script src="{{ url_for('static', filename='js/camera.js') }}"></script>
 					<p><button class="capture-button">Capture video</button>
 				</div>
-				<h1>
+				<div class="result">
+					<h1>
 					RESULTAT DE SEGMENTATION
-				</h1>
-				<img src="" id="segmentedFrame"></img>
+					</h1>
+					<div class="result">
+						<img src="" id="segmentedFrame" class="center"/>
+					</div>
+				</div>
 			</div>
 		</section>
 		<section class="explanations">
@@ -88,7 +92,7 @@
 					NOUS CONTACTER
 				</h1>
 				<div class="links">
-					<a href="https://github.com/raphaellndr" target="blank_">
+					<a href="https://github.com/etiennelndr/picasso" target="blank_">
 						<i class="fab fa-github-square"> </i
 					></a>
 					<a

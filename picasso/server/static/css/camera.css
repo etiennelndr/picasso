@@ -7,10 +7,17 @@
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Opera and Firefox */
 }
-#video {
-    width: 80%;
+
+.video {
+    width: 100%;
     top: 200px;
 }
+
+.result {
+    width: 100%;
+    top: 300px;
+}
+
 .center {
     display: block;
     margin-left: auto;
@@ -83,7 +90,7 @@ section.presentation {
 }
 
 section.segmentation {
-    height: 970px;
+    height: 1300px;
     background-color: #353946;
     color: white;
 }

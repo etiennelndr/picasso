@@ -57,25 +57,25 @@ function getStream() {
 function gotStream(stream) {
     window.stream = stream; // make stream available to console
     videoElement.srcObject = stream;
-};
+}
 
 function handleError(error) {
     console.error('Error: ', error);
-};
+}
 
 
 if('WebSocket' in window) {
-    connect('wss://192.168.1.42:12400/predict');
+    connect('wss://192.168.0.12:12400/predict');
 } else {
     alert('Web sockets are not supported.');
 }
 
-var back = document.createElement('canvas');
-var backcontext = back.getContext('2d');
+let back = document.createElement('canvas');
+let backcontext = back.getContext('2d');
 
-var attempts = 0;
+let attempts = 0;
 function checkFlag() {
-    if (videoElement.videoWidth == 0 || videoElement.videoHeight == 0) {
+    if (videoElement.videoWidth === 0 || videoElement.videoHeight === 0) {
         window.setTimeout(checkFlag, 100);
     } else {
         if (attempts++ < 10) {
@@ -93,15 +93,15 @@ function sendFrames() {
     console.log(back.width, back.height)
 
     segmentedFrame = document.getElementById('segmentedFrame');
-    console.log(segmentedFrame)
-    console.log(segmentedFrame.width)
-    console.log(segmentedFrame.height)
+    console.log("SEGMENTED FRAME" + segmentedFrame)
+    console.log("SEGMENTED FRAME WIDTH" + segmentedFrame.width)
+    console.log("SEGMENTED FRAME LENGTH" + segmentedFrame.height)
     segmentedFrame.width = videoElement.videoWidth
     segmentedFrame.height = videoElement.videoHeight
 
     setInterval(function() {
         backcontext.drawImage(videoElement, 0, 0);
-        var stringData=back.toDataURL('image/jpeg');
+        let stringData=back.toDataURL('image/jpeg');
         send(stringData);
     }, 50);
 }
