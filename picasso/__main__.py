@@ -120,8 +120,8 @@ def server(host, port):
         host=host,
         port=port,
         debug=True,
-        certfile=pathlib.Path('cert.pem'),
-        keyfile=pathlib.Path('key.pem')
+        certfile=pathlib.Path("cert.pem"),
+        keyfile=pathlib.Path("key.pem"),
     )
 
 

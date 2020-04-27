@@ -5,33 +5,32 @@ import pathlib
 
 import quart
 
-
 app = quart.Quart(__name__)
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
 
-LANGUAGES = {
-    "en": "english",
-    "fr": "french"
-}
+LANGUAGES = {"en": "english", "fr": "french"}
 
 
 @app.after_request
 def after_request(response: quart.Response):
     # Sometimes, web browsers store all files in the cache. In order to avoid
     # this behaviour, change the HTTP header with the following instructions.
-    response.headers["Cache-Control"] = "no-cache, no-store," \
-                                        "must-revalidate, max-age=0"
+    response.headers["Cache-Control"] = (
+        "no-cache, no-store," "must-revalidate, max-age=0"
+    )
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
     return response
 
 
-@app.route('/camera/<language>')
+@app.route("/camera/<language>")
 async def camera(language: str):
     if language not in LANGUAGES:
         quart.abort(404, f"Unsupported language: {language}.")
 
-    return await quart.render_template(f"camera.{language}.html", cache_timeout=0)
+    return await quart.render_template(
+        f"camera.{language}.html", cache_timeout=0
+    )
 
 
 @app.websocket("/predict")

@@ -4,9 +4,15 @@ https://challengedata.ens.fr/participants/challenges/25/
 
 ### Installing
 
+Create a new conda environment and install the packages from `requirements.txt`:
 ```
 conda create -n picasso_venv
 conda install -c conda-forge -n picasso_venv --file requirements.txt
+```
+
+Install pre-commit hook:
+```
+pre-commit install
 ```
 
 ### Generate self-signed certificate
